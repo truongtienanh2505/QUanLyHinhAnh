@@ -1,0 +1,178 @@
+{
+  "name": "My workflow 3",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        0
+      ],
+      "id": "3a53ce74-4f65-4487-a3d2-ba940d516110",
+      "name": "Telegram Trigger",
+      "webhookId": "b72d7b14-927e-42ec-8a02-77528d9e9d4a",
+      "credentials": {
+        "telegramApi": {
+          "id": "RmiVpiobqSxbj96J",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.photo[1].file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "5bd104ee-d3f8-4878-98c0-85942405f92f",
+      "name": "Get a file",
+      "webhookId": "fc60b22c-d7ac-4e43-81f4-dd834a1ec06c",
+      "credentials": {
+        "telegramApi": {
+          "id": "RmiVpiobqSxbj96J",
+          "name": "Telegram account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.remove.bg/v1.0/removebg",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "parameterType": "formBinaryData",
+              "name": "image_file",
+              "inputDataFieldName": "data"
+            },
+            {
+              "name": "size",
+              "value": "auto"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        400,
+        0
+      ],
+      "id": "f2af96cd-34ed-43ef-845c-d6e30bc61c66",
+      "name": "HTTP Request1",
+      "credentials": {
+        "httpMultipleHeadersAuth": {
+          "id": "JahnsCyRYyIc7ljR",
+          "name": "Multiple Headers Auth account 2"
+        },
+        "httpBearerAuth": {
+          "id": "XT1ruQHKcOdeZzdy",
+          "name": "Bearer Auth account"
+        },
+        "httpHeaderAuth": {
+          "id": "guJGDjuGmqzVTGsG",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "={{ $('Telegram Trigger').item.json.message.caption }}",
+        "driveId": {
+          "__rl": true,
+          "value": "My Drive",
+          "mode": "list",
+          "cachedResultName": "My Drive",
+          "cachedResultUrl": "https://drive.google.com/drive/my-drive"
+        },
+        "folderId": {
+          "__rl": true,
+          "value": "1hVcAzXkNwrhJAdjiVLvDZZHkSYcG6OSt",
+          "mode": "list",
+          "cachedResultName": "lập trình máy học",
+          "cachedResultUrl": "https://drive.google.com/drive/folders/1hVcAzXkNwrhJAdjiVLvDZZHkSYcG6OSt"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        608,
+        0
+      ],
+      "id": "e3f54544-55b8-41ab-aed3-3264dcc60a6a",
+      "name": "Upload file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "acsVg32mJwGd4yk1",
+          "name": "Google Drive OAuth2 API"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request1": {
+      "main": [
+        [
+          {
+            "node": "Upload file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "fb678470-df81-4860-9fc9-c50f6a321b1c",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "c46be29c34fe9154f64231e65bafa7462a85ef16e3697c79ca15518586473984"
+  },
+  "id": "JNNU4ppu2jJFXKaM",
+  "tags": []
+}
